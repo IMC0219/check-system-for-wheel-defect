@@ -7,7 +7,7 @@ from typing import Union, List, Dict
 
 
 class YOLOv8Detector:
-    def __init__(self, model_path: str = "yolov8n.pt", conf_threshold: float = 0.5, iou_threshold: float = 0.5):
+    def __init__(self, model_path: str = "trained_model_by_amns.onnx", conf_threshold: float = 0.5, iou_threshold: float = 0.5):
         """
         初始化YOLOv8检测器
         
