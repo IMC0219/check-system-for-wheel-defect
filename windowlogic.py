@@ -2,25 +2,25 @@
 
 # if __name__ == "__main__":
 #     pass
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QGraphicsPixmapItem,QGraphicsScene
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QGraphicsPixmapItem,QGraphicsScene,QWizardPage
 from PySide6.QtGui import QPixmap, QImage
 from ui_wizardpage import Ui_WizardPage
 from model_api import YOLOv8Detector
 import cv2
 
-class MainWindow(QMainWindow):
+class MainWindow(QWizardPage):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_WizardPage  # 自动生成的UI类
+        self.ui = Ui_WizardPage()  # 自动生成的UI类
         self.ui.setupUi(self)
 
         # 连接信号槽
-        self.ui.btnLoad.clicked.connect(self.image_input_button)
-        self.ui.btnDetect.clicked.connect(self.check_start_button)
+        self.ui.image_input_button.clicked.connect(self.load_image)
+        self.ui.check_start_button.clicked.connect(self.run_detection)
 
         # 初始化图像显示场景
         self.scene = QGraphicsScene()
-        self.ui.imageView.setScene(self.scene)
+        self.ui.graphicsView.setScene(self.scene)
 
     def load_image(self):
         """加载轮毂图像"""

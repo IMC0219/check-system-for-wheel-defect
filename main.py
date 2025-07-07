@@ -1,17 +1,16 @@
 # your_main_window.py
-from PySide6.QtWidgets import QMainWindow
+import sys
+from PySide6.QtWidgets import QMainWindow,QApplication
 from PySide6.QtCore import Slot
 from ui_wizardpage import Ui_WizardPage  # 导入转换后的UI类
+from windowlogic import MainWindow
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.ui = Ui_WizardPage()
-        self.ui.setupUi(self)  # 直接设置UI
-        
-        # 剩余逻辑同上...
-        self.ui.pushButton.clicked.connect(self.handle_click)
-
-    @Slot()
-    def handle_click(self):
-        print("Button clicked!")
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    
+    window = MainWindow()
+    window.setWindowTitle("Your Application Name")  # 设置窗口标题
+    window.resize(800, 600)  # 可选：设置初始大小
+    window.show()
+    
+    sys.exit(app.exec())
