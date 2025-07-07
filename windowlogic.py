@@ -49,14 +49,15 @@ class MainWindow(QMainWindow):
         defects = YOLOv8Detector.detect(self.cv_image, threshold)  # 您的视觉算法
 
         # 绘制检测结果
-        result_img = draw_defects(self.cv_image, defects)  # 在图像上标记缺陷
+        result_img = YOLOv8Detector.draw_defects(self.cv_image, defects)  # 在图像上标记缺陷
 
-        # 更新表格
-        self.ui.defectTable.setRowCount(len(defects))
-        for i, defect in enumerate(defects):
-            self.ui.defectTable.setItem(i, 0, QTableWidgetItem(defect.type))
-            self.ui.defectTable.setItem(i, 1, QTableWidgetItem(str(defect.x)))
+        # 更新表格(回头看看能不能加)
+        #self.ui.defectTable.setRowCount(len(defects))
+        #for i, defect in enumerate(defects):
+        #    self.ui.defectTable.setItem(i, 0, QTableWidgetItem(defect.type))
+        #    self.ui.defectTable.setItem(i, 1, QTableWidgetItem(str(defect.x)))
             # ... 其他列
 
         # 更新状态
         self.ui.lbStatus.setText(f"发现 {len(defects)} 处缺陷")
+
