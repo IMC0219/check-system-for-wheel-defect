@@ -83,3 +83,98 @@ class YOLOv8Detector:
         """
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         cv2.imwrite(str(output_path), image)
+
+    def draw_defects(self, image: np.ndarray, defects: List[Dict], 
+                     bbox_color: tuple[int, int, int] = (0, 0, 255),  # 默认红色
+                     text_color: tuple[int, int, int] = (255, 255, 255),  # 默认白色
+                     line_width: int = 2,
+                     font_scale: float = 0.7) -> np.ndarray:
+        """
+        在图像上绘制缺陷标识
+
+        参数:
+        image: 原始图像 (numpy数组)
+        defects: 缺陷列表 (包含bbox, class_name, confidence等)
+        bbox_color: 边界框颜色 (BGR格式)
+        text_color: 文本颜色 (BGR格式)
+        line_width: 边界框线宽
+        font_scale: 文本大小比例
+    
+        返回:
+        绘制了缺陷标识的图像 (numpy数组)
+        """
+        # 创建图像的副本，避免修改原始图像
+        result_image = image.copy()
+    
+        # 获取图像尺寸
+        h, w = image.shape[:2]
+    
+        # 遍历所有缺陷
+        for defect in defects:
+           # 检查是否有边界框数据
+            if "bbox" not in defect:
+                continue
+        
+            try:
+                # 获取边界框坐标并确保为整数
+                bbox = defect["bbox"]
+                x1, y1, x2, y2 = map(int, bbox)
+            
+                # 确保坐标在图像范围内
+                x1 = max(0, min(x1, w-1))
+                y1 = max(0, min(y1, h-1))
+                x2 = max(0, min(x2, w-1))
+                y2 = max(0, min(y2, h-1))
+            except (ValueError, TypeError) as e:
+                print(f"无效的边界框数据: {defect.get('bbox')} - 错误: {e}")
+                continue
+        
+        # 绘制边界框
+            cv2.rectangle(
+                img=result_image,
+                pt1=(x1, y1),
+                pt2=(x2, y2),
+                color=bbox_color,
+                thickness=line_width
+            )
+        
+        # 准备文本标签
+            class_name = defect.get("class_name", "未知")
+            confidence = defect.get("confidence", 0.0)
+            label = f"{class_name} {confidence:.2f}"
+        
+        # 计算文本位置
+            (text_width, text_height), _ = cv2.getTextSize(
+                label, 
+                cv2.FONT_HERSHEY_SIMPLEX, 
+                font_scale, 
+                thickness=line_width
+            )
+        
+        # 确保文本位置在图像范围内
+            text_y = max(text_height + 5, y1 - 5)
+            text_y = min(text_y, h - 5)
+        
+        # 绘制文本背景
+            cv2.rectangle(
+                img=result_image,
+                pt1=(x1, y1 - text_height - 5),
+                pt2=(x1 + text_width, y1),
+                color=bbox_color,
+                thickness=cv2.FILLED
+            )
+        
+        # 绘制文本
+            cv2.putText(
+                img=result_image,
+                text=label,
+                org=(x1, text_y),
+                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale=font_scale,
+                color=text_color,
+                thickness=line_width,
+                lineType=cv2.LINE_AA
+            )
+    
+        return result_image
+    

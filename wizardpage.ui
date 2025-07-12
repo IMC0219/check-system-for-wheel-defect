@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>547</width>
-    <height>338</height>
+    <width>670</width>
+    <height>419</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
   <widget class="QPushButton" name="check_start_button">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>410</x>
      <y>180</y>
      <width>121</width>
      <height>81</height>
@@ -60,6 +60,70 @@
    </property>
    <property name="text">
     <string>导入文件</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="SpinBox_conf">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>240</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.100000000000000</double>
+   </property>
+   <property name="value">
+    <double>0.500000000000000</double>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="SpinBox_iou">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>190</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.100000000000000</double>
+   </property>
+   <property name="value">
+    <double>0.500000000000000</double>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>170</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>置信度阈值(0-1):</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>220</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>iou阈值(0-1):</string>
    </property>
   </widget>
  </widget>

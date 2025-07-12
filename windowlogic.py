@@ -2,25 +2,25 @@
 
 # if __name__ == "__main__":
 #     pass
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QGraphicsPixmapItem,QGraphicsScene
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QGraphicsPixmapItem,QGraphicsScene,QWizardPage
 from PySide6.QtGui import QPixmap, QImage
 from ui_wizardpage import Ui_WizardPage
 from model_api import YOLOv8Detector
 import cv2
 
-class MainWindow(QMainWindow):
+class MainWindow(QWizardPage):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_WizardPage  # 自动生成的UI类
+        self.ui = Ui_WizardPage()  # 自动生成的UI类
         self.ui.setupUi(self)
 
         # 连接信号槽
-        self.ui.btnLoad.clicked.connect(self.image_input_button)
-        self.ui.btnDetect.clicked.connect(self.check_start_button)
+        self.ui.image_input_button.clicked.connect(self.load_image)
+        self.ui.check_start_button.clicked.connect(self.run_detection)
 
         # 初始化图像显示场景
         self.scene = QGraphicsScene()
-        self.ui.imageView.setScene(self.scene)
+        self.ui.graphicsView.setScene(self.scene)
 
     def load_image(self):
         """加载轮毂图像"""
@@ -38,25 +38,35 @@ class MainWindow(QMainWindow):
             self.scene.clear()
             pixmap = QPixmap.fromImage(qt_image)
             self.scene.addPixmap(pixmap)
-            self.ui.imageView.fitInView(self.scene.itemsBoundingRect())
+            self.ui.graphicsView.fitInView(self.scene.itemsBoundingRect())
 
     def run_detection(self):
         """执行缺陷检测（示例）"""
         # 获取检测参数（实际项目中从UI控件读取）
-        threshold = self.ui.sliderThreshold.value()
+        threshold_conf = self.ui.SpinBox_conf.value()
+        threshold_iou = self.ui.SpinBox_iou.value()
+        etc_detector = YOLOv8Detector(conf_threshold = threshold_conf, iou_threshold = threshold_iou)
 
         # 调用检测算法（伪代码）
-        defects = YOLOv8Detector.detect(self.cv_image, threshold)  # 您的视觉算法
+        result_img,defects = etc_detector.detect(self.cv_image)
 
         # 绘制检测结果
-        result_img = draw_defects(self.cv_image, defects)  # 在图像上标记缺陷
 
-        # 更新表格
-        self.ui.defectTable.setRowCount(len(defects))
-        for i, defect in enumerate(defects):
-            self.ui.defectTable.setItem(i, 0, QTableWidgetItem(defect.type))
-            self.ui.defectTable.setItem(i, 1, QTableWidgetItem(str(defect.x)))
+        rgb_image = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        qt_image = QImage(rgb_image.data, w, h, ch * w, QImage.Format_RGB888)
+        # 给你看看这是个什么玩意
+        cv2.imshow("Detection Result", result_img)
+        cv2.waitKey(0)  # 等待按键
+        cv2.destroyAllWindows()
+
+        # 更新表格(回头看看能不能加)
+        #self.ui.defectTable.setRowCount(len(defects))
+        #for i, defect in enumerate(defects):
+        #    self.ui.defectTable.setItem(i, 0, QTableWidgetItem(defect.type))
+        #    self.ui.defectTable.setItem(i, 1, QTableWidgetItem(str(defect.x)))
             # ... 其他列
 
         # 更新状态
-        self.ui.lbStatus.setText(f"发现 {len(defects)} 处缺陷")
+        #self.ui.lbStatus.setText(f"发现 {len(defects)} 处缺陷")
+
