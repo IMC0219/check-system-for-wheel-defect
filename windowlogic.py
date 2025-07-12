@@ -38,15 +38,16 @@ class MainWindow(QWizardPage):
             self.scene.clear()
             pixmap = QPixmap.fromImage(qt_image)
             self.scene.addPixmap(pixmap)
-            self.ui.imageView.fitInView(self.scene.itemsBoundingRect())
+            self.ui.graphicsView.fitInView(self.scene.itemsBoundingRect())
 
     def run_detection(self):
         """执行缺陷检测（示例）"""
         # 获取检测参数（实际项目中从UI控件读取）
-        threshold = self.ui.sliderThreshold.value()
+        threshold_conf = self.ui.SpinBox_conf.value()
+        threshold_iou = self.ui.SpinBox_iou.value()
 
         # 调用检测算法（伪代码）
-        defects = YOLOv8Detector.detect(self.cv_image, threshold)  # 您的视觉算法
+        defects = YOLOv8Detector.detect(self.cv_image)
 
         # 绘制检测结果
         result_img = YOLOv8Detector.draw_defects(self.cv_image, defects)  # 在图像上标记缺陷
@@ -59,5 +60,5 @@ class MainWindow(QWizardPage):
             # ... 其他列
 
         # 更新状态
-        self.ui.lbStatus.setText(f"发现 {len(defects)} 处缺陷")
+        #self.ui.lbStatus.setText(f"发现 {len(defects)} 处缺陷")
 
