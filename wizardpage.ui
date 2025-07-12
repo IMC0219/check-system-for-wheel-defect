@@ -110,7 +110,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>conf置信度区间(0-1):</string>
+    <string>置信度阈值(0-1):</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -123,7 +123,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>iou置信度区间(0-1):</string>
+    <string>iou阈值(0-1):</string>
    </property>
   </widget>
  </widget>

@@ -45,12 +45,20 @@ class MainWindow(QWizardPage):
         # 获取检测参数（实际项目中从UI控件读取）
         threshold_conf = self.ui.SpinBox_conf.value()
         threshold_iou = self.ui.SpinBox_iou.value()
+        etc_detector = YOLOv8Detector(conf_threshold = threshold_conf, iou_threshold = threshold_iou)
 
         # 调用检测算法（伪代码）
-        defects = YOLOv8Detector.detect(self.cv_image)
+        result_img,defects = etc_detector.detect(self.cv_image)
 
         # 绘制检测结果
-        result_img = YOLOv8Detector.draw_defects(self.cv_image, defects)  # 在图像上标记缺陷
+
+        rgb_image = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        qt_image = QImage(rgb_image.data, w, h, ch * w, QImage.Format_RGB888)
+        # 给你看看这是个什么玩意
+        cv2.imshow("Detection Result", result_img)
+        cv2.waitKey(0)  # 等待按键
+        cv2.destroyAllWindows()
 
         # 更新表格(回头看看能不能加)
         #self.ui.defectTable.setRowCount(len(defects))
